@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Http\Requests\StoreBookRequest;
-use App\Http\Requests\UpdateBookRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -34,13 +32,13 @@ class BookController extends Controller
             'published_at' => ['required', 'date'],
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 "message" => "Kesalahan validasi",
                 "data" => $validator->errors()
             ], 422);
         }
-        // dd($request->all());
+        
         // Handle file upload
         $image = $request->file('image_url');
         $originalName = $image->getClientOriginalName(); // Get the original file name
@@ -75,7 +73,7 @@ class BookController extends Controller
     {
         $book = Book::find($id);
 
-        if(!$book){
+        if (!$book) {
             return response()->json([
                 "message" => "Buku tidak ditemukan",
                 "data" => null
@@ -96,7 +94,7 @@ class BookController extends Controller
     {
         $book = Book::find($id);
 
-        if(!$book){
+        if (!$book) {
             return response()->json([
                 "message" => "Buku tidak ditemukan",
                 "data" => null
@@ -112,7 +110,7 @@ class BookController extends Controller
             'published_at' => ['required', 'date'],
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
                 "message" => "Kesalahan validasi",
                 "data" => $validator->errors()
@@ -132,7 +130,7 @@ class BookController extends Controller
             $oldImage = basename($book->image_url);
 
             // Delete the old image if it exists
-            if ($oldImage && Storage::disk('public')->exists('images/'. $oldImage)) {
+            if ($oldImage && Storage::disk('public')->exists('images/' . $oldImage)) {
                 Storage::disk('public')->delete('images/' . $oldImage);
             }
 
@@ -163,8 +161,8 @@ class BookController extends Controller
     public function destroy($id)
     {
         $book = Book::find($id);
-        
-        if(!$book){
+
+        if (!$book) {
             return response()->json([
                 "message" => "Buku tidak ditemukan",
                 "data" => null
@@ -173,7 +171,7 @@ class BookController extends Controller
 
         $oldImage = basename($book->image_url);
         // Delete the book
-        if ($oldImage && Storage::disk('public')->exists('images/'. $oldImage)) {
+        if ($oldImage && Storage::disk('public')->exists('images/' . $oldImage)) {
             Storage::disk('public')->delete('images/' . $oldImage);
         }
 
